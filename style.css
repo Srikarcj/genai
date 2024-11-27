@@ -1,0 +1,624 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+nav {
+    background-color: #0d6efd;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
+
+.content-container {
+    padding: 40px;
+    text-align: center;
+    flex: 1;
+}
+
+.generate-btn {
+    padding: 10px 30px;
+    font-size: 18px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.generate-btn:hover {
+    background-color: #0056b3;
+}
+
+.news-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.news-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.news-card {
+    width: 30%;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    text-align: center;
+    margin: 10px;
+}
+
+.news-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.news-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.news-card p {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Form Styling */
+.form-container {
+    display: none;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    width: 300px;
+    text-align: center;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.form-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer */
+footer {
+    background-color:#333;
+    color:white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+
+/* Additional UI */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #343a40;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background 0.3s, color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+/* Main Content */
+.content-container {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.content-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.generate-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.generate-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.news-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Forms */
+.form-container {
+    background: #fff;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-container input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-container button {
+    background-color: rgb(25, 179, 239);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.form-container button:hover {
+    background-color: rgb(25, 179, 239);
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content-container h1 {
+        font-size: 2em;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+}
+
+
+/* Additional UI */
+
+/* Header and Footer Styling */
+nav {
+    background-color: black; /* Black background for header */
+    padding: 10px 0;
+    font-family: Arial, sans-serif;
+}
+
+footer {
+    background-color: black; /* Black background for footer */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    border-top: 1px solid #444; /* Subtle border */
+}
+
+/* Navigation Bar */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding-left: 20px;
+}
+
+nav ul li {
+    position: relative; /* Enables dropdown positioning */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white; /* Default text color */
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 0; /* Padding without box effect */
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #f39c12; /* Gold color on hover for text */
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    z-index: 1000;
+    padding: 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block; /* Show when hovering on the dropdown parent */
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.dropdown-menu li a {
+    color: white; /* White text for dropdown items */
+    font-size: 15px;
+    font-weight: 400;
+    padding: 5px 0; /* Inline padding for spacing without a box */
+    display: inline-block;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    color: #f39c12; /* Gold color for dropdown items on hover */
+}
+
+/* Remove background and boxes for categories */
+nav ul li a, .dropdown-menu li a {
+    background-color: transparent;
+    border: none;
+}
+
+/* Body content styling */
+.content-container {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+}
+
+.generate-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.generate-btn:hover {
+    background-color: #0056b3;
+}
+
+
+/* Additional UI */
+
+/* Header and Footer Styling */
+nav {
+    background-color: black; /* Black background for header */
+    padding: 10px 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center; /* Center align the navigation */
+}
+
+footer {
+    background-color: black; /* Black background for footer */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    border-top: 1px solid #444; /* Subtle border */
+}
+
+/* Navigation Bar */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center the menu items */
+    align-items: center;
+    gap: 20px;
+}
+
+nav ul li {
+    position: relative; /* Enables dropdown positioning */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white; /* Default text color */
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 10px; /* Increased padding for better click area */
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #f39c12; /* Gold color on hover for text */
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    z-index: 1000;
+    background-color: black; /* Set the dropdown menu background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow to create depth */
+    border-radius: 8px; /* Rounded corners for dropdown */
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block; /* Show when hovering on the dropdown parent */
+}
+
+.dropdown-menu li {
+    list-style: none;
+    padding: 5px 0;
+}
+
+.dropdown-menu li a {
+    color: white; /* White text for dropdown items */
+    font-size: 15px;
+    font-weight: 400;
+    padding: 8px 12px; /* Padding for more clickable space */
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f39c12; /* Gold background color on hover */
+    color: black; /* Change text color to black when hovering */
+}
+
+/* Body content styling */
+.content-container {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+}
+
+.generate-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.generate-btn:hover {
+    background-color: #0056b3;
+}
+
+
+/* Additional UI */
+
+
+/* Dropdown Menu */
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px;
+    background-color: black;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Soft shadow for a floating effect */
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block; /* Show when hovering on the dropdown parent */
+}
+
+/* Category Links (features) */
+.dropdown-menu li {
+    list-style: none;
+    padding: 10px 20px;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 6px; /* Rounded corners */
+}
+
+.dropdown-menu li a {
+    color: white; /* White text for readability */
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #007bff; /* Blue background color on hover */
+    color: white; /* Keep the text white on hover */
+}
+
+/* Clean hover effect */
+.dropdown-menu li:hover {
+    background-color: #007bff; /* Blue background color for category item */
+    cursor: pointer; /* Change cursor to pointer */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+/* Subtle animation on the dropdown appearance */
+.dropdown-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: dropdownAppear 0.3s forwards; /* Fade-in and slide-up */
+}
+
+@keyframes dropdownAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Optional: Hover effects for the main menu items */
+nav ul li a:hover {
+    color: #007bff; /* Change main menu text color on hover */
+}
+
+
+/* Additional UI */
+
+
+/* Categories Dropdown Styles */
+.navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover effect for menu items */
+.dropdown-menu .dropdown-item:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Background color for dropdown */
+.dropdown-menu {
+    background-color: #343a40 !important;
+    border: none;
+}
+
+/* Text color and padding adjustments for dropdown items */
+.dropdown-item {
+    padding: 12px 20px;
+    color: white !important;
+}
+
+/* Make sure text color remains readable */
+.dropdown-item.text-white {
+    color: #fff !important;
+}

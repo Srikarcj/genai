@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time News - Politics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #343a40;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 60%;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+        .search-btn {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* News Section */
+        .news-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .news-item {
+            width: 19%;
+            margin: 1%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+        }
+        .news-item img {
+            width: 100%;
+            height: auto;
+            border-bottom: 2px solid #ddd;
+        }
+        .news-item h3 {
+            font-size: 18px;
+            padding: 10px;
+            text-align: center;
+        }
+        .news-item p {
+            padding: 0 10px;
+            text-align: justify;
+        }
+        .news-item .btn {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .news-item .share-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .news-item .share-buttons i {
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Mobile and Small Screen Responsiveness */
+        @media screen and (max-width: 768px) {
+            .news-item {
+                width: 48%;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .news-item {
+                width: 100%;
+            }
+        }
+
+        /* Bookmark Feature */
+        .bookmark-btn {
+            background-color: #f39c12;
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Dark Mode Styling */
+        body.dark-mode {
+            background-color: #2e2e2e;
+            color: #ddd;
+        }
+        body.dark-mode .navbar {
+            background-color: #222;
+        }
+        body.dark-mode .footer {
+            background-color: #222;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy Policy</a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" class="search-input" id="search-input" placeholder="Search for news..." />
+        <button class="search-btn" onclick="searchArticles()">Search</button>
+    </div>
+
+    <!-- News Section -->
+    <div class="news-container" id="news-container">
+        <!-- News articles will be dynamically inserted here -->
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Category News - 2024 | <a href="privacy.html">Privacy Policy</a></p>
+    </div>
+
+    <script>
+        // API Key and News Container
+        const apiKey = 'd81e614416d84621a76635db2d46e697'; // Replace with your API key
+        const newsContainer = document.getElementById('news-container');
+        let currentPage = 1;
+
+        // Function to Fetch News Based on Category
+        async function fetchNews(category) {
+            const url = `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${apiKey}&pageSize=50&page=${currentPage}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.status === 'ok') {
+                displayNews(data.articles);
+            } else {
+                console.log('Failed to fetch news');
+            }
+        }
+
+        // Function to Display News Articles
+        function displayNews(articles) {
+            articles.forEach(article => {
+                const articleElement = document.createElement('div');
+                articleElement.classList.add('news-item');
+
+                // Use a fallback image in case the article doesn't have one
+                const imageUrl = article.urlToImage ? article.urlToImage : 'https://via.placeholder.com/150'; // Fallback image
+
+                articleElement.innerHTML = `
+                    <img src="${imageUrl}" alt="${article.title}">
+                    <h3>${article.title}</h3>
+                    <p>${article.description}</p>
+                    <button class="btn" onclick="window.location.href='${article.url}'">Read More</button>
+                    <div class="share-buttons">
+                        <i class="fas fa-share-alt"></i>
+                        <i class="fab fa-facebook-f" onclick="shareOnFacebook('${article.url}')"></i>
+                        <i class="fab fa-twitter" onclick="shareOnTwitter('${article.url}')"></i>
+                        <i class="fab fa-whatsapp" onclick="shareOnWhatsApp('${article.url}')"></i>
+                    </div>
+                    <button class="bookmark-btn" onclick="bookmarkArticle('${article.url}')">Bookmark</button>
+                `;
+                newsContainer.appendChild(articleElement);
+            });
+        }
+
+        // Search Articles
+        function searchArticles() {
+            const searchQuery = document.getElementById('search-input').value;
+            fetchNews(searchQuery);
+        }
+
+        // Bookmark Article
+        function bookmarkArticle(url) {
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+            bookmarks.push(url);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            alert('Article bookmarked!');
+        }
+
+        // Sharing Functions
+        function shareOnFacebook(url) {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+
+        function shareOnTwitter(url) {
+            window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+        }
+
+        function shareOnWhatsApp(url) {
+            window.open(`https://api.whatsapp.com/send?text=${url}`, '_blank');
+        }
+
+        // Initial Fetch for Politics Category
+        fetchNews('science');
+    </script>
+
+</body>
+</html>

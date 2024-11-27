@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Page</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #4285F4;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 16px;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Blog Container */
+        .content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .blog-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .blog-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 15px;
+        }
+
+        .blog-card-content h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .blog-card-content p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .blog-card-content a {
+            text-decoration: none;
+            color: #4285F4;
+            font-weight: bold;
+        }
+
+        /* Modal for Read More */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 60%;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .modal h2 {
+            color: #4285F4;
+        }
+
+        .modal p {
+            color: #333;
+        }
+
+        .modal-close {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+
+        .modal-close:hover {
+            background-color: #C70039;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active, .modal.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer .social-icons a {
+            margin: 0 10px;
+            color: white;
+        }
+
+        footer .social-icons a:hover {
+            color: #4285F4;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Blog</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="Features.html">Features</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<div class="content">
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search blog posts...">
+    </div>
+
+    <!-- Blog Posts -->
+    <div class="blog-container" id="blog-container">
+        <!-- Dynamic Blog Cards Will Go Here -->
+    </div>
+</div>
+
+<!-- Modal for Blog Content -->
+<div class="overlay"></div>
+<div class="modal">
+    <h2 id="modal-title">Blog Title</h2>
+    <p id="modal-content">Full content of the blog goes here...</p>
+    <button class="modal-close" id="modal-close">Close</button>
+</div>
+
+<footer>
+    <p>&copy; 2024 Blog Website</p>
+    <div class="social-icons">
+        <a href="#">Facebook</a>
+        <a href="#">Twitter</a>
+        <a href="#">LinkedIn</a>
+    </div>
+</footer>
+
+<script>
+    // API Key for NewsAPI
+    const apiKey = 'd81e614416d84621a76635db2d46e697';
+    const blogContainer = document.getElementById('blog-container');
+    const searchInput = document.getElementById('search');
+    const modal = document.querySelector('.modal');
+    const overlay = document.querySelector('.overlay');
+    const modalClose = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+
+    // Fetch Blog Posts from NewsAPI
+    async function fetchBlogs() {
+        const response = await fetch(`https://newsapi.org/v2/everything?q=technology&apiKey=${apiKey}`);
+        const data = await response.json();
+        const blogs = data.articles;
+
+        renderBlogs(blogs);
+    }
+
+    // Render Blog Cards
+    function renderBlogs(blogs) {
+        blogContainer.innerHTML = blogs.map(blog => `
+            <div class="blog-card">
+                <img src="${blog.urlToImage || 'https://via.placeholder.com/300x200'}" alt="${blog.title}">
+                <div class="blog-card-content">
+                    <h3>${blog.title}</h3>
+                    <p>${blog.description || 'No description available.'}</p>
+                    <a href="#" class="read-more" data-title="${blog.title}" data-content="${blog.content || 'No content available.'}">Read More</a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Show Modal with Full Blog Content
+    function showModal(title, content) {
+        modalTitle.textContent = title;
+        modalContent.textContent = content;
+        modal.classList.add('active');
+        overlay.classList.add('active');
+    }
+
+    // Close Modal
+    modalClose.addEventListener('click', () => {
+        modal.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', () => {
+        modal.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    // Search Functionality
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filteredBlogs = blogs.filter(blog =>
+            blog.title.toLowerCase().includes(query) || blog.description.toLowerCase().includes(query)
+        );
+        renderBlogs(filteredBlogs);
+    });
+
+    // Initialize Blog Page
+    fetchBlogs();
+</script>
+
+</body>
+</html>

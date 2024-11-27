@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Crime Data Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        /* Navbar Styles */
+        .navbar {
+            background-color: #343a40;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        /* Content Styles */
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            width: 100%;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .chart-container {
+            width: 60%;
+            height: 400px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .legend-container {
+            width: 35%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: scroll;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+        #crime-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        /* Footer Styles */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Button Styles */
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        /* Mobile and Small Screen Responsiveness */
+        @media screen and (max-width: 768px) {
+            .chart-container {
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+            .legend-container {
+                width: 100%;
+                margin-top: 20px;
+            }
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .navbar a {
+                margin: 5px 0;
+            }
+            .content {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">Crime Statistics</a>
+        <a href="#">Crime Reports</a>
+        <a href="#">Dashboard</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="chart-container">
+            <h1>Real-time Crime Data Visualization</h1>
+            <canvas id="crimeChartCanvas"></canvas>
+        </div>
+        <div class="legend-container">
+            <div id="crime-legend"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Crime Data Visualization - 2024 | <a href="#">Privacy Policy</a></p>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Crime data with unique color categories
+        const crimeColors = {
+            "violent-crime": "#FF5733",
+            "burglary": "#33FF57",
+            "anti-social-behaviour": "#33A1FF",
+            "robbery": "#FF33A1",
+            "drugs": "#FFB833",
+            "shoplifting": "#4B0082",
+            "other-theft": "#FFD700",
+            "vehicle-crime": "#8B0000",
+            "bicycle-theft": "#00FFFF",
+            "public-order": "#800080"
+        };
+
+        // Fetch Crime Data from Police Data API (UK)
+        async function fetchCrimeData(lat, lng) {
+            const apiUrl = `https://data.police.uk/api/crimes-at-location?lat=${lat}&lng=${lng}`;
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                processCrimeData(data);
+            } catch (error) {
+                console.error("Error fetching crime data:", error);
+            }
+        }
+
+        // Process Crime Data and Update Chart
+        function processCrimeData(crimeData) {
+            const crimeCategories = {};
+            crimeData.forEach(crime => {
+                const category = crime.category; 
+                if (crimeCategories[category]) {
+                    crimeCategories[category]++;
+                } else {
+                    crimeCategories[category] = 1;
+                }
+            });
+
+            // Update Chart
+            const crimeTypes = Object.keys(crimeCategories);
+            const crimeCounts = Object.values(crimeCategories);
+            const crimeColorsArray = crimeTypes.map(type => crimeColors[type] || "#FFFFFF");
+
+            crimeChart.data.labels = crimeTypes;
+            crimeChart.data.datasets[0].data = crimeCounts;
+            crimeChart.data.datasets[0].backgroundColor = crimeColorsArray;
+            crimeChart.update();
+
+            // Update Crime Legend
+            updateCrimeLegend(crimeCategories);
+        }
+
+        // Update Crime Legend
+        function updateCrimeLegend(crimeCategories) {
+            const legendContainer = document.getElementById('crime-legend');
+            legendContainer.innerHTML = '';
+
+            Object.keys(crimeCategories).forEach(category => {
+                const legendItem = document.createElement('div');
+                legendItem.classList.add('legend-item');
+
+                const legendColorBox = document.createElement('div');
+                legendColorBox.classList.add('legend-color-box');
+                legendColorBox.style.backgroundColor = crimeColors[category] || "#FFFFFF";
+
+                const legendText = document.createElement('span');
+                legendText.innerHTML = `${category}: ${crimeCategories[category]} incidents`;
+
+                legendItem.appendChild(legendColorBox);
+                legendItem.appendChild(legendText);
+                legendContainer.appendChild(legendItem);
+            });
+        }
+
+        // Initialize Chart
+        const ctx = document.getElementById('crimeChartCanvas').getContext('2d');
+        const crimeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Crime Counts',
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: 'black',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.label}: ${tooltipItem.raw} incidents`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Example of fetching data for London, UK
+        fetchCrimeData(51.5074, -0.1278); // Lat, Lng for London
+    </script>
+
+</body>
+</html>

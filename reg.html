@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --bg-color-light: #f9f9f9;
+            --text-color-light: #333;
+            --bg-color-dark: #181818;
+            --text-color-dark: #eee;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 12px 12px 0;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            font-size: 16px;
+            outline: none;
+            background: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .form-group label {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            font-size: 16px;
+            color: #aaa;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -10px;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+        }
+
+        .toggle-mode {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            cursor: pointer;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        .toggle-mode:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+            <div class="form-group">
+                <input type="text" id="username" placeholder=" " required>
+                <label for="username">Username</label>
+            </div>
+            <div class="error" id="username-error"></div>
+            
+            <div class="form-group">
+                <input type="email" id="email" placeholder=" " required>
+                <label for="email">Email</label>
+            </div>
+            <div class="error" id="email-error"></div>
+            
+            <div class="form-group">
+                <input type="password" id="password" placeholder=" " required>
+                <label for="password">Password</label>
+            </div>
+            <div class="error" id="password-error"></div>
+            
+            <button type="submit">Register</button>
+        </form>
+        <div class="toggle-mode" onclick="toggleTheme()">Switch to Dark Mode</div>
+    </div>
+
+    <script>
+        const signupForm = document.getElementById("signup-form");
+        const body = document.body;
+
+        // Toggle between Light and Dark Mode
+        function toggleTheme() {
+            body.classList.toggle("dark-mode");
+        }
+
+        signupForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Input Validation
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            let isValid = true;
+
+            if (!username) {
+                document.getElementById("username-error").textContent = "Username cannot be empty.";
+                isValid = false;
+            } else {
+                document.getElementById("username-error").textContent = "";
+            }
+
+            if (!email.includes("@")) {
+                document.getElementById("email-error").textContent = "Invalid email address.";
+                isValid = false;
+            } else {
+                document.getElementById("email-error").textContent = "";
+            }
+
+            if (password.length < 6) {
+                document.getElementById("password-error").textContent = "Password must be at least 6 characters.";
+                isValid = false;
+            } else {
+                document.getElementById("password-error").textContent = "";
+            }
+
+            if (isValid) {
+                localStorage.setItem("user", JSON.stringify({ username, email, password }));
+                alert("Registration successful! Please login.");
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</body>
+</html>

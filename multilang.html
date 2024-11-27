@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pan India News Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            color: white !important;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        .state-list {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .state-card {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .state-card:hover {
+            background-color: #0056b3;
+        }
+
+        .state-card h5 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .news-section {
+            margin-top: 40px;
+        }
+
+        .news-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+        }
+
+        .news-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 23%;
+            transition: transform 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .news-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .news-item h6 {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .news-item p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .news-item .views {
+            font-size: 0.9rem;
+            color: #666;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .news-item .views i {
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+
+        .share-buttons {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .share-buttons a {
+            margin: 0 10px;
+            font-size: 1.2rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            width: 100%;
+            margin-top: auto;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer small {
+            font-size: 0.85rem;
+        }
+
+        .search-bar-wrapper {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .search-bar-wrapper input {
+            width: 50%;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        .search-bar-wrapper input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .back-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .loader img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .bookmark-btn {
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bookmark-btn:hover {
+            background-color: #218838;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .bookmark-section {
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .state-card {
+                width: 100%;
+            }
+
+            .news-item {
+                width: 100%;
+            }
+
+            .search-bar-wrapper input {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Dark Mode Toggle Button -->
+<button class="dark-mode-toggle" id="dark-mode-toggle">Toggle Dark Mode</button>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Pan India News</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html" id="home-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="bookmarks-link">Bookmarks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Search Box -->
+    <div class="search-bar-wrapper">
+        <input type="text" class="form-control" id="search-bar" placeholder="Search news by state..." />
+    </div>
+
+    <!-- List of Indian States -->
+    <section class="state-list" id="state-list">
+        <!-- Dynamic state cards go here -->
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section" id="news-section"></section>
+
+    <!-- Bookmarks Section -->
+    <section class="bookmark-section" id="bookmark-section" style="display: none;">
+        <h2>Bookmarked News</h2>
+        <div id="bookmarked-news"></div>
+    </section>
+
+    <!-- Back Button -->
+    <button class="back-button" id="back-button" style="display: none;" onclick="backToStates()">Back to States</button>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <small>© 2024 Pan India News Page. All Rights Reserved.</small>
+</div>
+
+<script>
+    const newsAPI = "https://newsapi.org/v2/everything?language=en&apiKey=5db044c3b5bb4ae28a7a8ef17ef87f36"; // Replace with your API key
+    let selectedState = null;
+    let bookmarks = new Set();
+    let views = new Map();
+
+    // Dark mode toggle
+    document.getElementById('dark-mode-toggle').onclick = () => {
+        document.body.classList.toggle('dark-mode');
+    };
+
+    // Load news by state
+    const loadStateNews = async (state) => {
+        selectedState = state;
+        document.getElementById('state-list').style.display = 'none';
+        document.getElementById('back-button').style.display = 'inline-block';
+        const loader = document.createElement('div');
+        loader.classList.add('loader');
+        loader.innerHTML = "<img src='https://via.placeholder.com/50' alt='Loading...' />";
+        document.getElementById('news-section').innerHTML = loader.outerHTML;
+
+        const response = await fetch(`${newsAPI}&q=${state}`);
+        const data = await response.json();
+        const articles = data.articles || [];
+        renderNews(articles);
+    };
+
+    // Render news articles
+    const renderNews = (articles) => {
+        let newsHtml = '';
+        const rows = Math.ceil(articles.length / 4);
+        for (let i = 0; i < rows; i++) {
+            newsHtml += `<div class="news-row">`;
+            for (let j = i * 4; j < (i + 1) * 4 && j < articles.length; j++) {
+                const article = articles[j];
+                const articleViews = views.get(j) || 0;
+                views.set(j, articleViews + 1);
+
+                newsHtml += `
+                    <div class="news-item">
+                        <img src="${article.urlToImage || 'https://via.placeholder.com/500'}" alt="News Image" />
+                        <h6>${article.title}</h6>
+                        <p>${article.description}</p>
+                        <button class="bookmark-btn" onclick="toggleBookmark(${j})">
+                            ${bookmarks.has(j) ? 'Remove Bookmark' : 'Bookmark'}
+                        </button>
+                        <div class="share-buttons">
+                            <a href="https://twitter.com/intent/tweet?text=${article.title}" target="_blank">Share on Twitter</a>
+                            <a href="https://wa.me/?text=${article.title}" target="_blank">Share on WhatsApp</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${article.url}" target="_blank">Share on Facebook</a>
+                        </div>
+                        <div class="views">
+                            <i class="fas fa-eye"></i> ${articleViews}
+                        </div>
+                    </div>
+                `;
+            }
+            newsHtml += '</div>';
+        }
+        document.getElementById('news-section').innerHTML = newsHtml;
+    };
+
+    // Toggle bookmark
+    const toggleBookmark = (index) => {
+        if (bookmarks.has(index)) {
+            bookmarks.delete(index);
+        } else {
+            bookmarks.add(index);
+        }
+        loadStateNews(selectedState);
+    };
+
+    // Show Bookmarks
+    const showBookmarks = () => {
+        const bookmarkedArticles = [];
+        bookmarks.forEach(index => {
+            bookmarkedArticles.push(articles[index]);
+        });
+        renderBookmarks(bookmarkedArticles);
+    };
+
+    // Render Bookmarked articles
+    const renderBookmarks = (bookmarkedArticles) => {
+        let bookmarkHtml = '';
+        bookmarkedArticles.forEach(article => {
+            bookmarkHtml += `
+                <div class="news-item">
+                    <img src="${article.urlToImage || 'https://via.placeholder.com/500'}" alt="News Image" />
+                    <h6>${article.title}</h6>
+                    <p>${article.description}</p>
+                    <div class="share-buttons">
+                        <a href="https://twitter.com/intent/tweet?text=${article.title}" target="_blank">Share on Twitter</a>
+                        <a href="https://wa.me/?text=${article.title}" target="_blank">Share on WhatsApp</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${article.url}" target="_blank">Share on Facebook</a>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('bookmarked-news').innerHTML = bookmarkHtml;
+        document.getElementById('bookmark-section').style.display = 'block';
+    };
+
+    // Back to states
+    const backToStates = () => {
+        selectedState = null;
+        document.getElementById('state-list').style.display = 'grid';
+        document.getElementById('news-section').innerHTML = '';
+        document.getElementById('back-button').style.display = 'none';
+        document.getElementById('bookmark-section').style.display = 'none';
+    };
+
+    // Populate states
+    const states = [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana",
+        "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+        "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+    ];
+
+    const stateListContainer = document.getElementById('state-list');
+    states.forEach(state => {
+        const stateCard = document.createElement('a');
+        stateCard.classList.add('state-card');
+        stateCard.innerHTML = `<h5>${state}</h5>`;
+        stateCard.onclick = () => loadStateNews(state);
+        stateListContainer.appendChild(stateCard);
+    });
+
+    // Search functionality
+    document.getElementById('search-bar').addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        const stateCards = document.querySelectorAll('.state-card');
+
+        stateCards.forEach(card => {
+            const stateName = card.querySelector('h5').innerText.toLowerCase();
+            if (stateName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Show Bookmarks
+    document.getElementById('bookmarks-link').addEventListener('click', showBookmarks);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
